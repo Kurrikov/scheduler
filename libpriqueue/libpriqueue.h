@@ -4,12 +4,20 @@
 #ifndef LIBPRIQUEUE_H_
 #define LIBPRIQUEUE_H_
 
+typedef struct noodle_t {
+  void *pasta;
+  noodle_t *next_noodle;
+} noodle_t;
 /**
   Priqueue Data Structure
 */
-typedef struct _priqueue_t
-{
-
+typedef struct _priqueue_t {
+  // size of queue
+  size_t size;
+  // front of queue
+  noodle_t *front;
+  // function pointer to comparing function
+  int (*comparer) (const void *, const void *);
 } priqueue_t;
 
 

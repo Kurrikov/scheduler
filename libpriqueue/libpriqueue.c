@@ -9,7 +9,7 @@
 
 /**
   Initializes the priqueue_t data structure.
-  
+
   Assumtions
     - You may assume this function will only be called once per instance of priqueue_t
     - You may assume this function will be the first function called using an instance of priqueue_t.
@@ -19,7 +19,9 @@
  */
 void priqueue_init(priqueue_t *q, int(*comparer)(const void *, const void *))
 {
-
+  q->size = 0;
+  q->front = NULL;
+  q->comparer = comparer;
 }
 
 
@@ -28,46 +30,86 @@ void priqueue_init(priqueue_t *q, int(*comparer)(const void *, const void *))
 
   @param q a pointer to an instance of the priqueue_t data structure
   @param ptr a pointer to the data to be inserted into the priority queue
-  @return The zero-based index where ptr is stored in the priority queue, where 0 indicates that ptr was stored at the front of the priority queue.
+  @return The zero-based index where ptr is stored in the priority queue,
+    where 0 indicates that ptr was stored at the front of the priority queue.
  */
 int priqueue_offer(priqueue_t *q, void *ptr)
 {
-	return -1;
+  noodle_t *new_noodle = malloc(sizeof(noodle_t));
+  if (q->size == 0) {
+    // create a node and set the front of the queue to it
+    new_noodle->pasta = ptr;
+    new_noodle->next_noodle = NULL;
+    q->front = new_noodle;
+  } else {
+    // TODO: handle priority
+    noodle_t *temp_noodle = q->front;
+    // find the node at the end of the queue
+    while (temp_noodle->next_noodle != NULL) {
+      temp_noodle = temp_noodle->next_noodle;
+    }
+    // create a node and put it at the end of the queue
+    new_noodle->pasta = ptr;
+    new_noodle->next_noodle = NULL;
+    temp_noodle->next_noodle = new_noodle;
+  }
+	return q->size++;
 }
 
 
 /**
   Retrieves, but does not remove, the head of this queue, returning NULL if
   this queue is empty.
- 
+
   @param q a pointer to an instance of the priqueue_t data structure
   @return pointer to element at the head of the queue
   @return NULL if the queue is empty
  */
 void *priqueue_peek(priqueue_t *q)
 {
-	return NULL;
+  if (q->size == 0) {
+    return NULL;
+  } else {
+    return q->front;
+  }
 }
 
 
 /**
   Retrieves and removes the head of this queue, or NULL if this queue
   is empty.
- 
+
   @param q a pointer to an instance of the priqueue_t data structure
-  @return the head of this queue
+  @return the data at the head of this queue
   @return NULL if this queue is empty
  */
 void *priqueue_poll(priqueue_t *q)
 {
-	return NULL;
+  if (q->size == 0) {
+    return NULL;
+  } else {
+    // get data stored in first element of the queue
+    noodle_t *front = q->front;
+    void *ptr = q->front->pasta;
+
+    // set the new front of the queue
+    if (q->front->next_noodle == NULL) {
+      q->front = NULL;
+    } else {
+      q->front = q->front->next_noodle;
+    }
+
+    free(front);
+    q->--size;
+    return ptr;
+  }
 }
 
 
 /**
   Returns the element at the specified position in this list, or NULL if
   the queue does not contain an index'th element.
- 
+
   @param q a pointer to an instance of the priqueue_t data structure
   @param index position of retrieved element
   @return the index'th element in the queue
@@ -80,10 +122,10 @@ void *priqueue_at(priqueue_t *q, int index)
 
 
 /**
-  Removes all instances of ptr from the queue. 
-  
+  Removes all instances of ptr from the queue.
+
   This function should not use the comparer function, but check if the data contained in each element of the queue is equal (==) to ptr.
- 
+
   @param q a pointer to an instance of the priqueue_t data structure
   @param ptr address of element to be removed
   @return the number of entries removed
@@ -97,7 +139,7 @@ int priqueue_remove(priqueue_t *q, void *ptr)
 /**
   Removes the specified index from the queue, moving later elements up
   a spot in the queue to fill the gap.
- 
+
   @param q a pointer to an instance of the priqueue_t data structure
   @param index position of element to be removed
   @return the element removed from the queue
@@ -111,19 +153,19 @@ void *priqueue_remove_at(priqueue_t *q, int index)
 
 /**
   Returns the number of elements in the queue.
- 
+
   @param q a pointer to an instance of the priqueue_t data structure
   @return the number of elements in the queue
  */
 int priqueue_size(priqueue_t *q)
 {
-	return 0;
+	return q->size;
 }
 
 
 /**
   Destroys and frees all the memory associated with q.
-  
+
   @param q a pointer to an instance of the priqueue_t data structure
  */
 void priqueue_destroy(priqueue_t *q)
