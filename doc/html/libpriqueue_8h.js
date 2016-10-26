@@ -1,6 +1,7 @@
 var libpriqueue_8h =
 [
-    [ "priqueue_t", "structpriqueue__t.html", null ],
+    [ "noodle_t", "structnoodle__t.html", "structnoodle__t" ],
+    [ "priqueue_t", "structpriqueue__t.html", "structpriqueue__t" ],
     [ "priqueue_at", "libpriqueue_8h.html#a235c841c290c40cc135ecf1e50b50016", null ],
     [ "priqueue_destroy", "libpriqueue_8h.html#ada56d19200ba3f31e9f30f5f6366bd98", null ],
     [ "priqueue_init", "libpriqueue_8h.html#a9032349e0146c726f1ee85f378e9f9ed", null ],

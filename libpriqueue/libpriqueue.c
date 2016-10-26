@@ -48,12 +48,13 @@ int priqueue_offer(priqueue_t *q, void *ptr)
     while (temp_noodle->next_noodle != NULL) {
       temp_noodle = temp_noodle->next_noodle;
     }
-    // create a node and put it at the end of the queue
+    // initialize a node and put it at the end of the queue
     new_noodle->pasta = ptr;
     new_noodle->next_noodle = NULL;
     temp_noodle->next_noodle = new_noodle;
   }
-	return q->size++;
+  // q->size++;
+	return ++(q->size);
 }
 
 
@@ -100,7 +101,7 @@ void *priqueue_poll(priqueue_t *q)
     }
 
     free(front);
-    q->--size;
+    --(q->size);
     return ptr;
   }
 }
@@ -117,14 +118,26 @@ void *priqueue_poll(priqueue_t *q)
  */
 void *priqueue_at(priqueue_t *q, int index)
 {
-	return NULL;
+  if (q->size == 0 || index < 0 || index >= (int)q->size) {
+  	return NULL;
+  }
+
+  int i = 0;
+  noodle_t *temp_noodle = q->front;
+  while (i <= index) {
+    temp_noodle = temp_noodle->next_noodle;
+    ++i;
+  }
+
+  return temp_noodle;
 }
 
 
 /**
   Removes all instances of ptr from the queue.
 
-  This function should not use the comparer function, but check if the data contained in each element of the queue is equal (==) to ptr.
+  This function should not use the comparer function, but check if the data contained
+  in each element of the queue is equal (==) to ptr.
 
   @param q a pointer to an instance of the priqueue_t data structure
   @param ptr address of element to be removed
@@ -132,7 +145,39 @@ void *priqueue_at(priqueue_t *q, int index)
  */
 int priqueue_remove(priqueue_t *q, void *ptr)
 {
-	return 0;
+  if (q->size == 0) {
+    return 0;
+  }
+  
+  noodle_t *lastgood = q->front;
+  noodle_t *temp_noodle = q->front;
+  int count = 0;
+
+  while(temp_noodle != NULL){
+    if (temp_noodle->pasta == ptr) {
+      // if node should be removed
+      if (temp_noodle == q->front) {
+        // if the front is being removed
+        q->front = lastgood->next_noodle;
+        lastgood = q->front;
+        free(temp_noodle);
+        ++count;
+        temp_noodle = lastgood;
+      } else {
+        // removing non-front element
+        lastgood->next_noodle = temp_noodle->next_noodle;
+        free(temp_noodle);
+        ++count;
+        temp_noodle = lastgood;
+      }
+    } else {
+      // node should not be removed
+      lastgood = temp_noodle;
+      temp_noodle = temp_noodle->next_noodle;
+    }
+  }
+  q->size -= count;
+	return count;
 }
 
 

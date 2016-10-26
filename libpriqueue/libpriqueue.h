@@ -4,10 +4,12 @@
 #ifndef LIBPRIQUEUE_H_
 #define LIBPRIQUEUE_H_
 
-typedef struct noodle_t {
+typedef struct noodle_t noodle_t;
+
+struct noodle_t {
   void *pasta;
   noodle_t *next_noodle;
-} noodle_t;
+};
 /**
   Priqueue Data Structure
 */
