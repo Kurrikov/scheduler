@@ -35,23 +35,41 @@ void priqueue_init(priqueue_t *q, int(*comparer)(const void *, const void *))
  */
 int priqueue_offer(priqueue_t *q, void *ptr)
 {
+  // initialize a node
   noodle_t *new_noodle = malloc(sizeof(noodle_t));
+  new_noodle->pasta = ptr;
+  new_noodle->next_noodle = NULL;
+  
   if (q->size == 0) {
-    // create a node and set the front of the queue to it
-    new_noodle->pasta = ptr;
-    new_noodle->next_noodle = NULL;
+    // set the front of the queue to new noodle
     q->front = new_noodle;
   } else {
-    // TODO: handle priority
+    // place new_noodle in proper location
     noodle_t *temp_noodle = q->front;
-    // find the node at the end of the queue
-    while (temp_noodle->next_noodle != NULL) {
-      temp_noodle = temp_noodle->next_noodle;
+    noodle_t *lastgood_noodle = q->front;
+
+    while (temp_noodle != NULL) {
+      if(q->comparer(ptr, temp_noodle->pasta) < 0) {
+        if (temp_noodle == q->front) {
+          // insert at the front if necessary
+          new_noodle->next_noodle = q->front;
+          q->front = new_noodle;
+        } else {
+          // insert between previous and temp
+          lastgood_noodle->next_noodle = new_noodle;
+          new_noodle->next_noodle = temp_noodle;
+        }
+      } else {
+        // shift down the list
+        lastgood_noodle = temp_noodle;
+        temp_noodle = temp_noodle->next_noodle;
+
+        if (temp_noodle == NULL) {
+          // insert at the end if the list has been exhausted
+          lastgood_noodle->next_noodle = new_noodle;
+        }
+      }
     }
-    // initialize a node and put it at the end of the queue
-    new_noodle->pasta = ptr;
-    new_noodle->next_noodle = NULL;
-    temp_noodle->next_noodle = new_noodle;
   }
   // q->size++;
 	return ++(q->size);
@@ -148,7 +166,7 @@ int priqueue_remove(priqueue_t *q, void *ptr)
   if (q->size == 0) {
     return 0;
   }
-  
+
   noodle_t *lastgood = q->front;
   noodle_t *temp_noodle = q->front;
   int count = 0;
