@@ -39,14 +39,14 @@ int priqueue_offer(priqueue_t *q, void *ptr)
   noodle_t *new_noodle = malloc(sizeof(noodle_t));
   new_noodle->pasta = ptr;
   new_noodle->next_noodle = NULL;
-  
+
   if (q->size == 0) {
     // set the front of the queue to new noodle
     q->front = new_noodle;
   } else {
     // place new_noodle in proper location
     noodle_t *temp_noodle = q->front;
-    noodle_t *lastgood_noodle = q->front;
+    noodle_t *previous_noodle = q->front;
 
     while (temp_noodle != NULL) {
       if(q->comparer(ptr, temp_noodle->pasta) < 0) {
@@ -56,17 +56,17 @@ int priqueue_offer(priqueue_t *q, void *ptr)
           q->front = new_noodle;
         } else {
           // insert between previous and temp
-          lastgood_noodle->next_noodle = new_noodle;
+          previous_noodle->next_noodle = new_noodle;
           new_noodle->next_noodle = temp_noodle;
         }
       } else {
         // shift down the list
-        lastgood_noodle = temp_noodle;
+        previous_noodle = temp_noodle;
         temp_noodle = temp_noodle->next_noodle;
 
         if (temp_noodle == NULL) {
           // insert at the end if the list has been exhausted
-          lastgood_noodle->next_noodle = new_noodle;
+          previous_noodle->next_noodle = new_noodle;
         }
       }
     }
@@ -210,6 +210,7 @@ int priqueue_remove(priqueue_t *q, void *ptr)
  */
 void *priqueue_remove_at(priqueue_t *q, int index)
 {
+
 	return 0;
 }
 
