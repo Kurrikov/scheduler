@@ -222,7 +222,33 @@ int priqueue_remove(priqueue_t *q, void *ptr)
  */
 void *priqueue_remove_at(priqueue_t *q, int index)
 {
-	return 0;
+  if (q == NULL || q->size == 0 || index < 0 || index >= (int)q->size) {
+  	return NULL;
+  }
+
+  noodle_t *temp_noodle = q->front;
+  noodle_t *previous_noodle = q->front;
+  int i = 0;
+  // move temp to the node to be removed
+  while (i < index) {
+    previous_noodle = temp_noodle;
+    temp_noodle = temp_noodle->next_noodle;
+    ++i;
+  }
+
+  if (temp_noodle == q->front) {
+    // move front of queue if removing the first node
+    q->front = q->front->next_noodle;
+  }
+
+  void *temp_pasta = temp_noodle->pasta;
+  // link around node to be removed
+  previous_noodle->next_noodle = temp_noodle->next_noodle;
+  // remove node
+  free(temp_noodle);
+  --(q->size);
+
+  return temp_pasta;
 }
 
 
