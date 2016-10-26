@@ -35,6 +35,13 @@ void priqueue_init(priqueue_t *q, int(*comparer)(const void *, const void *))
  */
 int priqueue_offer(priqueue_t *q, void *ptr)
 {
+  if (q == NULL) {
+    return -1;
+  }
+
+  int count = 0;
+  ++(q->size);
+
   // initialize a node
   noodle_t *new_noodle = malloc(sizeof(noodle_t));
   new_noodle->pasta = ptr;
@@ -43,6 +50,7 @@ int priqueue_offer(priqueue_t *q, void *ptr)
   if (q->size == 0) {
     // set the front of the queue to new noodle
     q->front = new_noodle;
+    return count;
   } else {
     // place new_noodle in proper location
     noodle_t *temp_noodle = q->front;
@@ -54,25 +62,29 @@ int priqueue_offer(priqueue_t *q, void *ptr)
           // insert at the front if necessary
           new_noodle->next_noodle = q->front;
           q->front = new_noodle;
+          return count;
         } else {
           // insert between previous and temp
           previous_noodle->next_noodle = new_noodle;
           new_noodle->next_noodle = temp_noodle;
+          return count;
         }
       } else {
         // shift down the list
         previous_noodle = temp_noodle;
         temp_noodle = temp_noodle->next_noodle;
+        ++count;
 
         if (temp_noodle == NULL) {
           // insert at the end if the list has been exhausted
           previous_noodle->next_noodle = new_noodle;
+          return count;
         }
       }
     }
+    // make compiler happy
+    return -1;
   }
-  // q->size++;
-	return ++(q->size);
 }
 
 
@@ -86,11 +98,11 @@ int priqueue_offer(priqueue_t *q, void *ptr)
  */
 void *priqueue_peek(priqueue_t *q)
 {
-  if (q->size == 0) {
+  if (q == NULL || q->size == 0) {
     return NULL;
-  } else {
-    return q->front;
   }
+
+  return q->front;
 }
 
 
@@ -104,24 +116,24 @@ void *priqueue_peek(priqueue_t *q)
  */
 void *priqueue_poll(priqueue_t *q)
 {
-  if (q->size == 0) {
+  if (q == NULL || q->size == 0) {
     return NULL;
-  } else {
-    // get data stored in first element of the queue
-    noodle_t *front = q->front;
-    void *ptr = q->front->pasta;
-
-    // set the new front of the queue
-    if (q->front->next_noodle == NULL) {
-      q->front = NULL;
-    } else {
-      q->front = q->front->next_noodle;
-    }
-
-    free(front);
-    --(q->size);
-    return ptr;
   }
+
+  // get data stored in first element of the queue
+  noodle_t *front = q->front;
+  void *ptr = q->front->pasta;
+
+  // set the new front of the queue
+  if (q->front->next_noodle == NULL) {
+    q->front = NULL;
+  } else {
+    q->front = q->front->next_noodle;
+  }
+
+  free(front);
+  --(q->size);
+  return ptr;
 }
 
 
@@ -136,7 +148,7 @@ void *priqueue_poll(priqueue_t *q)
  */
 void *priqueue_at(priqueue_t *q, int index)
 {
-  if (q->size == 0 || index < 0 || index >= (int)q->size) {
+  if (q == NULL || q->size == 0 || index < 0 || index >= (int)q->size) {
   	return NULL;
   }
 
@@ -163,7 +175,7 @@ void *priqueue_at(priqueue_t *q, int index)
  */
 int priqueue_remove(priqueue_t *q, void *ptr)
 {
-  if (q->size == 0) {
+  if (q == NULL || q->size == 0) {
     return 0;
   }
 
@@ -210,7 +222,6 @@ int priqueue_remove(priqueue_t *q, void *ptr)
  */
 void *priqueue_remove_at(priqueue_t *q, int index)
 {
-
 	return 0;
 }
 
@@ -223,6 +234,10 @@ void *priqueue_remove_at(priqueue_t *q, int index)
  */
 int priqueue_size(priqueue_t *q)
 {
+  if (q == NULL) {
+    return 0;
+  }
+
 	return q->size;
 }
 
@@ -234,5 +249,17 @@ int priqueue_size(priqueue_t *q)
  */
 void priqueue_destroy(priqueue_t *q)
 {
+  if (q == NULL) {
+    return;
+  }
 
+  noodle_t *temp_noodle;
+  // free nodes within queue
+  while (q->front != NULL) {
+    temp_noodle = q->front->next_noodle;
+    free(q->front);
+    q->front = temp_noodle;
+  }
+  // free queue structure
+  free(q);
 }
