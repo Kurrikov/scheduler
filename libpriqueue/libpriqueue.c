@@ -35,12 +35,11 @@ void priqueue_init(priqueue_t *q, int(*comparer)(const void *, const void *))
  */
 int priqueue_offer(priqueue_t *q, void *ptr)
 {
-  if (q == NULL) {
+  if (q == NULL || ptr == NULL) {
     return -1;
   }
 
   int count = 0;
-  ++(q->size);
 
   // initialize a node
   noodle_t *new_noodle = malloc(sizeof(noodle_t));
@@ -50,6 +49,7 @@ int priqueue_offer(priqueue_t *q, void *ptr)
   if (q->size == 0) {
     // set the front of the queue to new noodle
     q->front = new_noodle;
+    ++(q->size);
     return count;
   } else {
     // place new_noodle in proper location
@@ -62,11 +62,13 @@ int priqueue_offer(priqueue_t *q, void *ptr)
           // insert at the front if necessary
           new_noodle->next_noodle = q->front;
           q->front = new_noodle;
+          ++(q->size);
           return count;
         } else {
           // insert between previous and temp
           previous_noodle->next_noodle = new_noodle;
           new_noodle->next_noodle = temp_noodle;
+          ++(q->size);
           return count;
         }
       } else {
@@ -78,6 +80,7 @@ int priqueue_offer(priqueue_t *q, void *ptr)
         if (temp_noodle == NULL) {
           // insert at the end if the list has been exhausted
           previous_noodle->next_noodle = new_noodle;
+          ++(q->size);
           return count;
         }
       }
@@ -119,21 +122,15 @@ void *priqueue_poll(priqueue_t *q)
   if (q == NULL || q->size == 0) {
     return NULL;
   }
-
   // get data stored in first element of the queue
   noodle_t *front = q->front;
-  void *ptr = q->front->pasta;
-
   // set the new front of the queue
-  if (q->front->next_noodle == NULL) {
-    q->front = NULL;
-  } else {
-    q->front = q->front->next_noodle;
-  }
-
+  q->front = q->front->next_noodle;
+  void* ptr = front->pasta;
   free(front);
   --(q->size);
   return ptr;
+
 }
 
 
@@ -152,14 +149,14 @@ void *priqueue_at(priqueue_t *q, int index)
   	return NULL;
   }
 
-  int i = 0;
+  int i = 1;
   noodle_t *temp_noodle = q->front;
   while (i <= index) {
     temp_noodle = temp_noodle->next_noodle;
     ++i;
   }
 
-  return temp_noodle;
+  return temp_noodle->pasta;
 }
 
 
@@ -286,6 +283,4 @@ void priqueue_destroy(priqueue_t *q)
     free(q->front);
     q->front = temp_noodle;
   }
-  // free queue structure
-  free(q);
 }
