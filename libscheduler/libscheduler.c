@@ -11,6 +11,7 @@
 priqueue_t queue;
 
 int FCFScomp(const void * a, const void * b) {
+  // always return 1 so that the job is placed at the back
   return 1;
 }
 int SJFcomp(const void * a, const void * b) {
@@ -92,7 +93,8 @@ int scheduler_new_job(int job_number, int time, int running_time, int priority)
   newJob->pid = job_number;
   newJob->arrivalTime = time;
   newJob->jobLength = running_time;
-  newJob->responseTime = 0;
+  // a responseTime of -1 indicates that a job has not been scheduled yet
+  newJob->responseTime = -1;
   newJob->lastCheckedTime = 0;
 
   // Find the first idle core
@@ -135,6 +137,7 @@ int scheduler_new_job(int job_number, int time, int running_time, int priority)
     if (coreArr[lowestPriIdx]->priority > newJob->priority) {
       // replace job with lowest priority with the new job
       priqueue_offer(&queue, coreArr[lowestPriIdx]);
+      newJob->responseTime = 0;
       coreArr[lowestPriIdx] = newJob;
       return lowestPriIdx;
     }
@@ -162,6 +165,7 @@ int scheduler_new_job(int job_number, int time, int running_time, int priority)
     if (coreArr[longestTimeIdx]->remainingTime > newJob->remainingTime) {
       // replace job with the longest remaining time with the new job
       priqueue_offer(&queue, coreArr[longestTimeIdx]);
+      newJob->responseTime = 0;
       coreArr[longestTimeIdx] = newJob;
       return longestTimeIdx;
     }
@@ -189,7 +193,27 @@ int scheduler_new_job(int job_number, int time, int running_time, int priority)
  */
 int scheduler_job_finished(int core_id, int job_number, int time)
 {
+  waitingTime += time - coreArr[core_id]->jobLength - coreArr[core_id]->arrivalTime;
+  turnaroundTime += time - coreArr[core_id]->arrivalTime;
+  responseTime += coreArr[core_id]->responseTime;
   ++numJobs;
+
+  // free memory held by completed job
+  free(coreArr[core_id]);
+  coreArr[core_id] = NULL;
+
+  // check waiting queue for a job to schedule
+  if (priqueue_size(&queue) != 0) {
+    coreArr[core_id] = priqueue_poll(&queue);
+    coreArr[core_id]->lastCheckedTime = time;
+    // check if the job has not been scheduled before
+    if (coreArr[core_id]->responseTime == -1) {
+      // set the responseTime to the delay between the job arriving and the job being scheduled
+      coreArr[core_id]->responseTime = time - coreArr[core_id]->arrivalTime;
+    }
+    return coreArr[core_id]->pid;
+  }
+  // indicate the core is left idle
 	return -1;
 }
 
@@ -209,6 +233,7 @@ int scheduler_job_finished(int core_id, int job_number, int time)
  */
 int scheduler_quantum_expired(int core_id, int time)
 {
+  // TODO: implement me
 	return -1;
 }
 
@@ -269,7 +294,13 @@ float scheduler_average_response_time()
 */
 void scheduler_clean_up()
 {
-
+  for (int i = 0; i < numCores; ++i) {
+    // free non NULL cores
+    if (coreArr[i] != NULL) {
+      free(coreArr[i]);
+    }
+  }
+  free(coreArr);
 }
 
 
@@ -277,7 +308,13 @@ void scheduler_clean_up()
   This function may print out any debugging information you choose. This
   function will be called by the simulator after every call the simulator
   makes to your scheduler.
-  In our provided output, we have implemented this function to list the jobs in the order they are to be scheduled. Furthermore, we have also listed the current state of the job (either running on a given core or idle). For example, if we have a non-preemptive algorithm and job(id=4) has began running, job(id=2) arrives with a higher priority, and job(id=1) arrives with a lower priority, the output in our sample output will be:
+
+  In our provided output, we have implemented this function to list the jobs in
+  the order they are to be scheduled. Furthermore, we have also listed the current
+  state of the job (either running on a given core or idle). For example, if we
+  have a non-preemptive algorithm and job(id=4) has began running, job(id=2)
+  arrives with a higher priority, and job(id=1) arrives with a lower priority,
+  the output in our sample output will be:
 
     2(-1) 4(0) 1(-1)
 

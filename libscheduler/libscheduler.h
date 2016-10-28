@@ -29,7 +29,7 @@ int numCores;
 job_t **coreArr;
 scheme_t schedule;
 
-int numJobs;
+int numJobs; //number of jobs that have been run
 float waitingTime;
 float turnaroundTime;
 float responseTime;
