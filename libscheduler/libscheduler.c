@@ -93,9 +93,9 @@ int scheduler_new_job(int job_number, int time, int running_time, int priority)
   newJob->pid = job_number;
   newJob->arrivalTime = time;
   newJob->jobLength = running_time;
-  // a responseTime of -1 indicates that a job has not been scheduled yet
-  newJob->responseTime = -1;
-  newJob->lastCheckedTime = 0;
+  newJob->remainingTime = running_time;
+  newJob->responseTime = 0;
+  newJob->lastCheckedTime = time;
 
   // Find the first idle core
   int idleCore = -1;
@@ -110,8 +110,6 @@ int scheduler_new_job(int job_number, int time, int running_time, int priority)
       // an idle core was found
       // place new job on idle core
       coreArr[idleCore] = newJob;
-      coreArr[idleCore]->responseTime = 0;
-      coreArr[idleCore]->lastCheckedTime = time;
       return idleCore;
   } else if (schedule == PPRI) {
     // preempt based on priority
@@ -137,7 +135,6 @@ int scheduler_new_job(int job_number, int time, int running_time, int priority)
     if (coreArr[lowestPriIdx]->priority > newJob->priority) {
       // replace job with lowest priority with the new job
       priqueue_offer(&queue, coreArr[lowestPriIdx]);
-      newJob->responseTime = 0;
       coreArr[lowestPriIdx] = newJob;
       return lowestPriIdx;
     }
@@ -147,7 +144,7 @@ int scheduler_new_job(int job_number, int time, int running_time, int priority)
     // index of the core with the job with the longest remaining time
     int longestTimeIdx = 0;
     // find the job with the longest remaining time
-    for (int i = 1; i < numCores; ++i) {
+    for (int i = 0; i < numCores; ++i) {
       // update the remaining time of each job on the CPU
       // by reducing it by the time that has elapsed since it was last checked
       coreArr[i]->remainingTime -= (time - coreArr[i]->lastCheckedTime);
@@ -165,13 +162,15 @@ int scheduler_new_job(int job_number, int time, int running_time, int priority)
     if (coreArr[longestTimeIdx]->remainingTime > newJob->remainingTime) {
       // replace job with the longest remaining time with the new job
       priqueue_offer(&queue, coreArr[longestTimeIdx]);
-      newJob->responseTime = 0;
       coreArr[longestTimeIdx] = newJob;
       return longestTimeIdx;
     }
   }
 
   // no scheduling changes are being made
+  // a responseTime of -1 indicates that a job has not been scheduled yet
+  newJob->responseTime = -1;
+  // printf("deferring job %d to the wait queue\n", newJob->pid);
   priqueue_offer(&queue, newJob);
   return -1;
 }
@@ -210,6 +209,7 @@ int scheduler_job_finished(int core_id, int job_number, int time)
     if (coreArr[core_id]->responseTime == -1) {
       // set the responseTime to the delay between the job arriving and the job being scheduled
       coreArr[core_id]->responseTime = time - coreArr[core_id]->arrivalTime;
+      // printf("job %d response time: %d\n", coreArr[core_id]->pid, coreArr[core_id]->responseTime);
     }
     return coreArr[core_id]->pid;
   }
