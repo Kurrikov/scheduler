@@ -104,8 +104,10 @@ $(document).ready(function(){initNavTree('libscheduler_8h.html','');});
 
 <div class="header">
   <div class="summary">
+<a href="#nested-classes">Data Structures</a> &#124;
 <a href="#enum-members">Enumerations</a> &#124;
-<a href="#func-members">Functions</a>  </div>
+<a href="#func-members">Functions</a> &#124;
+<a href="#var-members">Variables</a>  </div>
   <div class="headertitle">
 <div class="title">libscheduler.h File Reference</div>  </div>
 </div><!--header-->
@@ -113,6 +115,12 @@ $(document).ready(function(){initNavTree('libscheduler_8h.html','');});
 
 <p><a href="libscheduler_8h_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
+Data Structures</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structjob__t.html">job_t</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stores information making up a job to be scheduled including any statistics.  <a href="structjob__t.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="enum-members"></a>
 Enumerations</h2></td></tr>
 <tr class="memitem:a4a9a6481e652361e21cee179b9a5412d"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a4a9a6481e652361e21cee179b9a5412d"></a>enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="libscheduler_8h.html#a4a9a6481e652361e21cee179b9a5412d">scheme_t</a> { <br />
@@ -157,6 +165,30 @@ Functions</h2></td></tr>
 <tr class="memitem:a21c8603e838d15e7967ae0c637a66650"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="libscheduler_8h.html#a21c8603e838d15e7967ae0c637a66650">scheduler_show_queue</a> ()</td></tr>
 <tr class="memdesc:a21c8603e838d15e7967ae0c637a66650"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function may print out any debugging information you choose.  <a href="#a21c8603e838d15e7967ae0c637a66650">More...</a><br /></td></tr>
 <tr class="separator:a21c8603e838d15e7967ae0c637a66650"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
+Variables</h2></td></tr>
+<tr class="memitem:a26a9fde8fa34b6ac1d3a9b50410a2a4c"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a26a9fde8fa34b6ac1d3a9b50410a2a4c"></a>
+int&#160;</td><td class="memItemRight" valign="bottom"><b>numCores</b></td></tr>
+<tr class="separator:a26a9fde8fa34b6ac1d3a9b50410a2a4c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:affd647344cc6c78c7acf65ed4fb3f92f"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="affd647344cc6c78c7acf65ed4fb3f92f"></a>
+<a class="el" href="structjob__t.html">job_t</a> **&#160;</td><td class="memItemRight" valign="bottom"><b>coreArr</b></td></tr>
+<tr class="separator:affd647344cc6c78c7acf65ed4fb3f92f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad837e2485a6f93cd96bf77135b345497"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ad837e2485a6f93cd96bf77135b345497"></a>
+<a class="el" href="libscheduler_8h.html#a4a9a6481e652361e21cee179b9a5412d">scheme_t</a>&#160;</td><td class="memItemRight" valign="bottom"><b>schedule</b></td></tr>
+<tr class="separator:ad837e2485a6f93cd96bf77135b345497"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a06a857be69c324076cb1ca758195bfff"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a06a857be69c324076cb1ca758195bfff"></a>
+int&#160;</td><td class="memItemRight" valign="bottom"><b>numJobs</b></td></tr>
+<tr class="separator:a06a857be69c324076cb1ca758195bfff"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a202021aa67dae232821bcfebe99474c0"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a202021aa67dae232821bcfebe99474c0"></a>
+float&#160;</td><td class="memItemRight" valign="bottom"><b>waitingTime</b></td></tr>
+<tr class="separator:a202021aa67dae232821bcfebe99474c0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ade1c7176318a7c53d12272de7d1180f3"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ade1c7176318a7c53d12272de7d1180f3"></a>
+float&#160;</td><td class="memItemRight" valign="bottom"><b>turnaroundTime</b></td></tr>
+<tr class="separator:ade1c7176318a7c53d12272de7d1180f3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a59fb847a65b813efebb1ac76fa216bd4"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a59fb847a65b813efebb1ac76fa216bd4"></a>
+float&#160;</td><td class="memItemRight" valign="bottom"><b>responseTime</b></td></tr>
+<tr class="separator:a59fb847a65b813efebb1ac76fa216bd4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Function Documentation</h2>
 <a class="anchor" id="a005484fb08747739cd1a5fc4fab74bea"></a>
@@ -429,7 +461,7 @@ Functions</h2></td></tr>
 <p>Initalizes the scheduler. </p>
 <p>Assumptions:</p><ul>
 <li>You may assume this will be the first scheduler function called.</li>
-<li>You may assume this function will be called once once.</li>
+<li>You may assume this function will be called only once.</li>
 <li>You may assume that cores is a positive, non-zero number.</li>
 <li>You may assume that scheme is a valid scheduling scheme.</li>
 </ul>

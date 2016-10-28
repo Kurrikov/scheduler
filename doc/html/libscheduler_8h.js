@@ -1,5 +1,6 @@
 var libscheduler_8h =
 [
+    [ "job_t", "structjob__t.html", "structjob__t" ],
     [ "scheme_t", "libscheduler_8h.html#a4a9a6481e652361e21cee179b9a5412d", [
       [ "FCFS", "libscheduler_8h.html#a4a9a6481e652361e21cee179b9a5412da423cd86c32d4009579e138b098f06ba8", null ],
       [ "SJF", "libscheduler_8h.html#a4a9a6481e652361e21cee179b9a5412da8ade209ddd4ef30da88ba1c9780b5e33", null ],
@@ -16,5 +17,12 @@ var libscheduler_8h =
     [ "scheduler_new_job", "libscheduler_8h.html#a102ab9a6713a66a68933f84d0308cd2f", null ],
     [ "scheduler_quantum_expired", "libscheduler_8h.html#a3bc78e1ddd7eb1ba2285fa60599d38c1", null ],
     [ "scheduler_show_queue", "libscheduler_8h.html#a21c8603e838d15e7967ae0c637a66650", null ],
-    [ "scheduler_start_up", "libscheduler_8h.html#a5dad2df1b25832a1438546974e337cbc", null ]
+    [ "scheduler_start_up", "libscheduler_8h.html#a5dad2df1b25832a1438546974e337cbc", null ],
+    [ "coreArr", "libscheduler_8h.html#affd647344cc6c78c7acf65ed4fb3f92f", null ],
+    [ "numCores", "libscheduler_8h.html#a26a9fde8fa34b6ac1d3a9b50410a2a4c", null ],
+    [ "numJobs", "libscheduler_8h.html#a06a857be69c324076cb1ca758195bfff", null ],
+    [ "responseTime", "libscheduler_8h.html#a59fb847a65b813efebb1ac76fa216bd4", null ],
+    [ "schedule", "libscheduler_8h.html#ad837e2485a6f93cd96bf77135b345497", null ],
+    [ "turnaroundTime", "libscheduler_8h.html#ade1c7176318a7c53d12272de7d1180f3", null ],
+    [ "waitingTime", "libscheduler_8h.html#a202021aa67dae232821bcfebe99474c0", null ]
 ];
