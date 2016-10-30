@@ -94,6 +94,7 @@ int scheduler_new_job(int job_number, int time, int running_time, int priority)
   newJob->arrivalTime = time;
   newJob->jobLength = running_time;
   newJob->remainingTime = running_time;
+  newJob->priority = priority;
   newJob->responseTime = 0;
   newJob->lastCheckedTime = time;
 
