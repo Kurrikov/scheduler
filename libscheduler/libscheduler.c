@@ -134,6 +134,10 @@ int scheduler_new_job(int job_number, int time, int running_time, int priority)
     }
 
     if (coreArr[lowestPriIdx]->priority > newJob->priority) {
+      //If the job was just scheduled and we are pre-empting it, reset the response time
+      if(coreArr[lowestPriIdx]->responseTime == time - coreArr[lowestPriIdx]->arrivalTime) {
+         coreArr[lowestPriIdx]->responseTime = -1;
+      }
       // replace job with lowest priority with the new job
       priqueue_offer(&queue, coreArr[lowestPriIdx]);
       coreArr[lowestPriIdx] = newJob;
@@ -161,6 +165,10 @@ int scheduler_new_job(int job_number, int time, int running_time, int priority)
     }
 
     if (coreArr[longestTimeIdx]->remainingTime > newJob->remainingTime) {
+      //If the job was just scheduled and we are pre-empting it, reset the response time
+      if(coreArr[longestTimeIdx]->responseTime == time - coreArr[longestTimeIdx]->arrivalTime) {
+         coreArr[longestTimeIdx]->responseTime = -1;
+      }
       // replace job with the longest remaining time with the new job
       priqueue_offer(&queue, coreArr[longestTimeIdx]);
       coreArr[longestTimeIdx] = newJob;
@@ -234,14 +242,29 @@ int scheduler_job_finished(int core_id, int job_number, int time)
  */
 int scheduler_quantum_expired(int core_id, int time)
 {
-  // TODO: implement me
-	return -1;
+  //Check if there is no job and if the queue is empty
+  if (coreArr[core_id] == NULL && priqueue_size(&queue) == 0) {
+    //Core should stay idle
+    return -1;
+  }
+  else {
+    //Load job onto the back of the queue
+    priqueue_offer(&queue, coreArr[core_id]);
+  }
+
+  //Pull job from front of the queue
+  coreArr[core_id] = priqueue_poll(&queue);
+  //Check to see if the job has been scheduled before
+  if (coreArr[core_id]->responseTime == -1) {
+    //Set the response time
+    coreArr[core_id]->responseTime = time - coreArr[core_id]->arrivalTime;
+  }
+	return coreArr[core_id]->pid;
 }
 
 
 /**
   Returns the average waiting time of all jobs scheduled by your scheduler.
-
   Assumptions:
     - This function will only be called after all scheduling is complete (all jobs that have arrived will have finished and no new jobs will arrive).
   @return the average waiting time of all jobs scheduled.
