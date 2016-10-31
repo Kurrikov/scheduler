@@ -118,7 +118,7 @@ int scheduler_new_job(int job_number, int time, int running_time, int priority)
     // index of the core with the job with the lowest priority
     int lowestPriIdx = 0;
     // find the job with the lowest priority
-    for (int i = 1; i < numCores; ++i) {
+    for (int i = 0; i < numCores; ++i) {
       // do not preempt jobs that have been scheduled this clock cycle
       if (coreArr[i]->arrivalTime != time) {
         // preempt the job with the lowest priority
@@ -126,7 +126,7 @@ int scheduler_new_job(int job_number, int time, int running_time, int priority)
           lowestPriIdx = i;
         } else if (coreArr[i]->priority == coreArr[lowestPriIdx]->priority) {
           // if two jobs have identical priorities, preempt the older one
-          if (coreArr[i]->arrivalTime < coreArr[lowestPriIdx]->arrivalTime) {
+          if (coreArr[i]->arrivalTime > coreArr[lowestPriIdx]->arrivalTime) {
             lowestPriIdx = i;
           }
         }
